@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <title>Series</title>
+</head>
+<body>
+    <header id="menu"></header>
+
+    <table class="table table-dark table-striped">
+        <thead>
+            <tr>
+                <th>TITULO</th>
+                <th>IMAGEN</th>
+                <th>NACIONALIDAD/GENERO</th>
+                <th>DETALLES</th>
+            </tr>
+        </thead>
+        <tbody id="peliculas">
+
+        </tbody>
+    </table>
+
+    <script src="./js/jquery-3.6.1.min.js"></script>
+    <script src="./js/bootstrap.bundle.min.js"></script>
+    <script>
+
+        //SE CARGA AL CARGAR LA PAGINA
+        $(document).ready(function () {
+            $("#menu").load("Menu.html");
+            cargarPeliculas();
+        });
+
+        var url = "https://apipeliculas2021.azurewebsites.net/";
+
+        //CARGA TODAS LAS PELICULAS
+        function cargarPeliculas() {
+
+            //RECOGEMOS LOS DATOS DE LA URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            const type = urlParams.get('type');
+            const nom = urlParams.get('nom');
+            $("#id").attr("value", id);
+
+            var request = "/api/Peliculas/" + type + "/" + id;
+
+            //LLAMADA A LA API PARA CARGAR Y MOSTRAR LOS DATOS
+            $.ajax({
+                "url": url + request,
+                "method": "GET" ,
+                "dataType" : "json" ,
+                "success" : function(data) {
+                    var html = "";
+                    $.each(data, function(index, dat) {
+
+                        html += `<tr>
+                            <td>${dat.titulo}</td>
+                            <td><img src=${dat.foto} style='width:100px' /></td>
+                            <td>${nom}</td>
+                            <td><a href='./Pelicula.html?id=${dat.idPelicula}' class='btn btn-info'>Detalles</a></td>
+                        </tr>`;
+                    });
+                    $("#peliculas").html(html);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

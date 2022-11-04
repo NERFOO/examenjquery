@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <title>Series</title>
+</head>
+<body>
+    <header id="menu"></header>
+
+    <div id="divImg" class="card" style="width: 18rem">
+        
+    </div>
+
+    <script src="./js/jquery-3.6.1.min.js"></script>
+    <script src="./js/bootstrap.bundle.min.js"></script>
+    <script>
+        //SE CARGA AL INICIAR LA PAGINA
+        $(document).ready(function () {
+            $("#menu").load("Menu.html");
+            cargarPelicula();
+        });
+
+
+        var url = "https://apipeliculas2021.azurewebsites.net/";
+        function cargarPelicula () {
+            //RECOGEMOS LOS DATOS DE LA URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+
+            var request = "/api/Peliculas/" + id;
+            $.ajax({
+                "url": url + request,
+                "method": "GET" ,
+                "dataType" : "json" ,
+                "success" : function(data) {
+                    var html = "";
+                        html += `
+                            <img src=${data.foto} style='width:100px' />
+                            <div class="card-body">
+                                <h5 class="card-title">${data.titulo}</h5>
+                                <p class="card-text">${data.argumento}</p>
+                                <a href=${data.youTube} class="btn btn-danger" target="_blank">Youtube</a>
+
+                                <a href="/Home.html" class="btn btn-info">Volver</a>
+                            </div>
+                        </tr>`;
+                    $("#divImg").html(html);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
